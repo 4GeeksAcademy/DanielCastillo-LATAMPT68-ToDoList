@@ -1,26 +1,26 @@
 import React, { useState } from "react";
 
 export const List = () => {
-    const [taskList, setTaskList] = useState([]);
-    const [draftText, setDraftText] = useState("");
+    const [todoTracker, setTodoTracker] = useState([]);
+    const [texto, setTexto] = useState("");
 
-    const appendTask = () => {
-        const cleanValue = draftText.trim();
+    const aggTask = () => {
+        const cleanValue = texto.trim();
 
         if (!cleanValue) return;
 
-        setTaskList((currentTasks) => [...currentTasks, cleanValue]);
-        setDraftText("");
+        setTodoTracker((currentTasks) => [...currentTasks, cleanValue]);
+        setTexto("");
     };
 
     const deleteTask = (taskIndex) => {
-        const filteredTasks = taskList.filter((_, currentIndex) => currentIndex !== taskIndex);
-        setTaskList(filteredTasks);
+        const filteredTasks = todoTracker.filter((_, currentIndex) => currentIndex !== taskIndex);
+        setTodoTracker(filteredTasks);
     };
 
     const handleInputKeyDown = (event) => {
         if (event.key === "Enter") {
-            appendTask();
+            aggTask();
         }
     };
 
@@ -33,18 +33,18 @@ export const List = () => {
                     type="text"
                     className="form-control mb-3"
                     placeholder="Type a task and press Enter"
-                    value={draftText}
-                    onChange={(event) => setDraftText(event.target.value)}
+                    value={texto}
+                    onChange={(event) => setTexto(event.target.value)}
                     onKeyDown={handleInputKeyDown}
                 />
 
                 <ul className="list-group">
-                    {taskList.length === 0 ? (
+                    {todoTracker.length === 0 ? (
                         <li className="list-group-item text-muted text-center">
                             No tasks added yet.
                         </li>
                     ) : (
-                        taskList.map((taskName, index) => (
+                        todoTracker.map((taskName, index) => (
                             <li
                                 key={index}
                                 className="list-group-item d-flex justify-content-between align-items-center"
@@ -64,9 +64,9 @@ export const List = () => {
                 </ul>
 
                 <p className="text-muted small mt-3 mb-0">
-                    {taskList.length === 0
+                    {todoTracker.length === 0
                         ? "Your task list is empty."
-                        : `${taskList.length} pending task${taskList.length > 1 ? "s" : ""}`}
+                        : `${todoTracker.length} pending task${todoTracker.length > 1 ? "s" : ""}`}
                 </p>
             </div>
         </div>
