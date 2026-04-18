@@ -1,59 +1,73 @@
 import React, { useState } from "react";
 
 export const List = () => {
-    const [todos, setTodos] = useState([]);
-    const [input, setInput] = useState("");
+    const [taskList, setTaskList] = useState([]);
+    const [draftText, setDraftText] = useState("");
 
-    function addTodo() {
-        if (input.trim() === "") return;
+    const appendTask = () => {
+        const cleanValue = draftText.trim();
 
-        setTodos([...todos, input]);
-        setInput("");
-    }
+        if (!cleanValue) return;
 
-    function removeTodo(indexToRemove) {
-        const updatedList = todos.filter((_, index) => index !== indexToRemove);
-        setTodos(updatedList);
-    }
+        setTaskList((currentTasks) => [...currentTasks, cleanValue]);
+        setDraftText("");
+    };
+
+    const deleteTask = (taskIndex) => {
+        const filteredTasks = taskList.filter((_, currentIndex) => currentIndex !== taskIndex);
+        setTaskList(filteredTasks);
+    };
+
+    const handleInputKeyDown = (event) => {
+        if (event.key === "Enter") {
+            appendTask();
+        }
+    };
 
     return (
-        <div className="container d-flex justify-content-center mt-5">
-            <div style={{ width: "400px" }}>
-                <h1 className="text-center text-muted">To Do's List</h1>
+        <div className="container mt-5">
+            <div className="mx-auto" style={{ maxWidth: "500px" }}>
+                <h1 className="text-center text-secondary mb-4">Task Tracker</h1>
 
                 <input
                     type="text"
-                    className="form-control"
-                    placeholder="What needs to be done?"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") addTodo();
-                    }}
+                    className="form-control mb-3"
+                    placeholder="Type a task and press Enter"
+                    value={draftText}
+                    onChange={(event) => setDraftText(event.target.value)}
+                    onKeyDown={handleInputKeyDown}
                 />
 
                 <ul className="list-group">
-                    {todos.map((todo, index) => (
-                        <li
-                            key={index}
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                        >
-                            {todo}
-                            <span
-                                style={{ cursor: "pointer", color: "red" }}
-                                onClick={() => removeTodo(index)}
-                            >
-                                X
-                            </span>
+                    {taskList.length === 0 ? (
+                        <li className="list-group-item text-muted text-center">
+                            No tasks added yet.
                         </li>
-                    ))}
+                    ) : (
+                        taskList.map((taskName, index) => (
+                            <li
+                                key={index}
+                                className="list-group-item d-flex justify-content-between align-items-center"
+                            >
+                                <span>{taskName}</span>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger"
+                                    onClick={() => deleteTask(index)}
+                                >
+                                    Remove
+                                </button>
+                            </li>
+                        ))
+                    )}
                 </ul>
 
-                <div className="text-muted mt-2">
-                    {todos.length === 0
-                        ? "Once you add a task, will appear here!"
-                        : `${todos.length} item left`}
-                </div>
+                <p className="text-muted small mt-3 mb-0">
+                    {taskList.length === 0
+                        ? "Your task list is empty."
+                        : `${taskList.length} pending task${taskList.length > 1 ? "s" : ""}`}
+                </p>
             </div>
         </div>
     );
